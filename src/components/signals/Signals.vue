@@ -17,6 +17,7 @@ SPDX-License-Identifier: MIT-0
             <tr>
               <th scope="col">Type</th>
               <th scope="col">Settings</th>
+              <th scope="col">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -32,6 +33,11 @@ SPDX-License-Identifier: MIT-0
 		<input class="form-control col-md-6"
 			:placeholder = "signalfields[signal['signal-type']].label"
 			v-model="signal.config[signalfields[signal['signal-type']].name]" >
+	      </td>
+	      <td>
+		<a @click="deleteItem(index)" href="#">
+                  <i class="bi bi-trash-fill" @click="deleteItem(index)"></i>
+		</a>
 	      </td>
             </tr>
           </tbody>
@@ -93,6 +99,10 @@ export default {
 	      
       });
     },
+    deleteItem(index) {
+	this.signal_data.splice(index, 1);
+    }, 
+
 
     saveSignals() {
       console.log(this.signal_data)

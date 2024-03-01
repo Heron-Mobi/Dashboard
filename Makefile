@@ -25,3 +25,11 @@ uploadsite:  ## upload site
 .PHONY: buildandupload
 buildandupload: |  buildsite uploadsite ## build and upload site
 
+.PHONY: selfregisterenable
+selfregisterenable:  ## allow users to self register
+	./scripts/adminonlyregister.sh ${REGION} False
+
+.PHONY: selfregisterdisable
+selfregisterdisable:  ## disallow users to self register
+	./scripts/adminonlyregister.sh ${REGION} True
+

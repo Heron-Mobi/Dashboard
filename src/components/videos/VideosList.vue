@@ -30,7 +30,7 @@ SPDX-License-Identifier: MIT-0
                 {{ video.date }}
               </td>
               <td>	
-		      <a v-bind:href="'https://video.heron.mobi/index.html?identityId='+ identityId +'&timestamp=' +  video.id" target="_blank">
+		      <a v-bind:href="videoBaseUrl +'/index.html?identityId='+ identityId +'&timestamp=' +  video.id" target="_blank">
 			      Link</a>
               </td>
               <td>
@@ -63,6 +63,7 @@ SPDX-License-Identifier: MIT-0
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { reactive, computed, onMounted } from "vue";
+import { videoBaseUrl } from "../../utils/config";
 import useAlert from "../../hooks/alert";
 
 export default {
@@ -110,6 +111,7 @@ export default {
     });
 
     return {
+      videoBaseUrl,
       useStore,
       videos,
       identityId,

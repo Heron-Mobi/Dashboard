@@ -16,7 +16,7 @@ getoutputs:  ## getoutputs from stacks
 
 .PHONY: buildsite
 buildsite:  getoutputs ## build site
-	NODE_OPTIONS=--openssl-legacy-provider npm run build
+	NODE_OPTIONS=--openssl-legacy-provider npm run install-build
 
 .PHONY: uploadsite
 uploadsite:  ## upload site

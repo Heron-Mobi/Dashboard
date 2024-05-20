@@ -3,9 +3,9 @@
   SPDX-License-Identifier: MIT-0 
 */
 import axios from "axios";
+import { apiBaseUrl } from "../../utils/config";
 
-// Update with your API Gateway endpoint. This is the Invoke URL you copied after deploying your API.
-const api = "https://api.heron.mobi/v0/videos";
+const api = `${apiBaseUrl}/v0/videos`;
 
 /*
   Axios is being used to make calls to API

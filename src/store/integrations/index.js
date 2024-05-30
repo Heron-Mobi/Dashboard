@@ -10,6 +10,7 @@ export default {
   state() {
     return {
       twitterLink: "",
+      sqs: "",
     };
   },
   mutations,

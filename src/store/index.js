@@ -13,16 +13,30 @@ export default createStore({
   state() {
     return {
       isLoading: false,
+      isLoadingTwitter: false,
+      isLoadingSQS: false,
     };
   },
   mutations: {
     setIsLoading(state, payload) {
       state.isLoading = payload;
     },
+    setIsLoadingTwitter(state, payload) {
+      state.isLoadingTwitter = payload;
+    },
+    setIsLoadingSQS(state, payload) {
+      state.isLoadingSQS = payload;
+    },
   },
   actions: {
     setIsLoading(context, payload) {
       context.commit("setIsLoading", payload);
+    },
+    setIsLoadingTwitter(context, payload) {
+      context.commit("setIsLoadingTwitter", payload);
+    },
+    setIsLoadingSQS(context, payload) {
+      context.commit("setIsLoadingSQS", payload);
     },
   },
   modules: {
@@ -35,6 +49,12 @@ export default createStore({
   getters: {
     getIsLoading(state) {
       return state.isLoading;
+    },
+    getIsLoadingTwitter(state) {
+      return state.isLoadingTwitter;
+    },
+    getIsLoadingSQS(state) {
+      return state.isLoadingSQS;
     },
   },
 });

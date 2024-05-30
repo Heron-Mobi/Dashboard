@@ -4,7 +4,10 @@
 */
 export default {
   setTwitterLink(state, payload) {
-
     state.twitterLink = payload;
+  },
+  setSQS(state, payload) {
+    console.log(payload) 
+    state.sqs = payload;
   },
 };

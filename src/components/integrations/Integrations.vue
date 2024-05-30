@@ -12,8 +12,9 @@ SPDX-License-Identifier: MIT-0
         <i class="bi bi-person-fill me-2"></i>Approve Integrations
       </template>
       <template v-slot:body>
+	<div>
 	<button @click="twitterIntegrate" class="btn btn-primary m-3"
-          	v-if="!isLoading">
+          	v-if="!isLoadingTwitter">
 		<i class="bi bi-twitter me-2"></i>
 		<span v-if="twitterLink.set">
 		  Twitter already integrated. Click to reset.
@@ -22,7 +23,21 @@ SPDX-License-Identifier: MIT-0
 		  Integrate Twitter
 		</span>
 	</button>
-        <base-spinner v-if="isLoading">Loading ...</base-spinner>
+        <base-spinner v-if="isLoadingTwitter">Loading ...</base-spinner>
+	</div>
+	<div>
+	<button @click="sqsToggle" class="btn btn-primary m-3"
+          	v-if="!isLoadingSQS">
+		<i class="bi bi-arrow-down-square-fill me-2"></i>
+		<span v-if="sqs.sqsdeployed">
+		  Disable external integration.
+		</span>
+		<span v-else>
+		  Enable external integration.
+		</span>
+	</button>
+        <base-spinner v-if="isLoadingSQS">Loading ...</base-spinner>
+	</div>
       </template>
     </base-card>
   </div>
@@ -35,10 +50,12 @@ import { reactive, computed, onMounted, ref } from "vue";
 import useAlert from "../../hooks/alert";
 
 export default {
-
   methods: {
     twitterIntegrate() {
 	window.location.href = this.twitterLink.link
+    },
+    sqsToggle() {
+	this.toggleSQSExists(this.sqs.sqsdeployed)
     }
   },
   setup() {
@@ -62,21 +79,61 @@ export default {
     const twitterLink = computed(function() {
       return store.getters.getTwitterLink;
     });
+
+    async function loadSQS() {
+      try {
+	await store.dispatch("fetchSQS");
+      } catch (err) {
+	console.log(err)
+        setMessage("Problem loading external integration.", "alert-danger");
+        store.dispatch("setIsLoadingSQS", false);
+      }
+    }
+
+
+    async function toggleSQSExists(exists) {
+      var action =  "create";
+      if (exists) {
+	      action = "delete";
+      }
+      try {
+	await store.dispatch("setSQS", action );
+        setMessage(
+	   "Your external integration was " + action + "d.",
+          "alert-success"
+        );
+      } catch (err) {
+        setMessage(
+	  "Problem " + action + "ing the external integration.",
+          "alert-danger"
+        );
+      }
+    }
+
     onMounted(function() {
       if (route.params.message) {
         message.value = route.params.message;
       }
       loadTwitterLink();
+      loadSQS();
     });
-    
-    const isLoading = computed(function() {
-      return store.getters.getIsLoading;
+    const sqs = computed(function() {
+      return store.getters.getSQS;
+    });
+    const isLoadingTwitter = computed(function() {
+      return store.getters.getIsLoadingTwitter;
     });
 
+    const isLoadingSQS = computed(function() {
+      return store.getters.getIsLoadingSQS;
+    });
     return {
       twitterLink,
+      sqs,
+      toggleSQSExists,
       useStore,
-      isLoading,
+      isLoadingTwitter,
+      isLoadingSQS,
       loadTwitterLink,
       message,
       messageStyleType,

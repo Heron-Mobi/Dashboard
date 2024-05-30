@@ -20,7 +20,7 @@ export default {
       "Authorization": rootState.authModule.idToken,
     };
 
-    commit("setIsLoading", true);
+    commit("setIsLoadingTwitter", true);
 
     const response = await axios.get(api + "twitter", {
       headers: headers,
@@ -28,7 +28,7 @@ export default {
 
     if (response.status == "200") {
       commit("setTwitterLink", response.data);
-      commit("setIsLoading", false);
+      commit("setIsLoadingTwitter", false);
     }
   },
   async setTwitterToken({ commit, rootState }, url) {
@@ -38,7 +38,7 @@ export default {
       "Authorization": rootState.authModule.idToken,
     };
 
-    commit("setIsLoading", true);
+    commit("setIsLoadingTwitter", true);
     console.log(url);
     const response = await axios.post(api + "twitter", url , {
       headers: headers,
@@ -47,8 +47,61 @@ export default {
     if (response.status == "200") {
       console.log(response.data)
       commit("setTwitterLink", response.data);
-      commit("setIsLoading", false);
+      commit("setIsLoadingTwitter", false);
     }
+  },
+
+  async fetchSQS({ commit, rootState }) {
+    // creates header object to pass Cognito idToken with request to API endpoint
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": rootState.authModule.idToken,
+    };
+    commit("setIsLoadingSQS", true);
+    while (true) {
+    	const response = await axios.get(api + "external", {
+      		headers: headers,
+    	});
+    	if (response.status == "200") {
+		if (!response.data.inprogress) {
+      			commit("setSQS", response.data);
+      			commit("setIsLoadingSQS", false);
+			break
+		}
+    	}
+    }
+  },
+  async setSQS({ commit, rootState }, payload) {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: rootState.authModule.idToken,
+    };
+
+    commit("setIsLoadingSQS", true);
+
+    const response = await axios.post(api + "external", payload, {
+      headers: headers,
+    });
+
+    if (response.status == "200") {
+
+
+    	while (true) {
+    		const response = await axios.get(api + "external", {
+      			headers: headers,
+    		});
+    		if (response.status == "200") {
+			if (!response.data.inprogress) {
+      				commit("setSQS", response.data);
+      				commit("setIsLoadingSQS", false);
+				break
+			}
+    		}
+
+
+
+    }
+   }
   },
 
 };

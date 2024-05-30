@@ -7,4 +7,8 @@ export default {
     console.log(state.twitterLink)
     return state.twitterLink;
   },
+  getSQS(state) {
+    console.log(state.sqs)
+    return state.sqs;
+  },
 };
